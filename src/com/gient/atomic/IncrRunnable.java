@@ -1,5 +1,7 @@
 package com.gient.atomic;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 执行num++操作的任务
  * @author gient
@@ -7,7 +9,7 @@ package com.gient.atomic;
  */
 public class IncrRunnable implements Runnable {
 
-	private volatile int num = 0;
+	private  AtomicInteger num = new AtomicInteger(0);
 	
 	@Override
 	public void run() {
@@ -20,11 +22,6 @@ public class IncrRunnable implements Runnable {
 	}
 
 	public int getNum() {
-		return num++;
+		return num.getAndIncrement();
 	}
-
-	public void setNum(int num) {
-		this.num = num;
-	}
-
 }
