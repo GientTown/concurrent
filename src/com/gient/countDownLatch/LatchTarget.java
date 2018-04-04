@@ -30,5 +30,4 @@ public class LatchTarget implements Runnable {
 			}
 		}
 	}
-
 }
