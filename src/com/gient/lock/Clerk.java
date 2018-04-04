@@ -16,9 +16,15 @@ public class Clerk {
 	public synchronized void get() {
 		if (products >= 10) {
 			System.out.println("货架已满，请稍后上货！");
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		} else {
-			System.out.println(Thread.currentThread().getName() + "请上货！");
+			System.out.println(Thread.currentThread().getName() + "正在上货！");
 			products++;
+			this.notifyAll();
 		}
 	}
 
@@ -26,11 +32,17 @@ public class Clerk {
 	 * 售货
 	 */
 	public synchronized void sale() {
-		if (products > 0) {
+		if (products <= 0) {
+			System.out.println("缺货");
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else {
 			System.out.println(Thread.currentThread().getName() + "购买");
 			products--;
-		} else {
-			System.out.println("缺货");
+			this.notifyAll();
 		}
 	}
 }
