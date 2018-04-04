@@ -1,5 +1,7 @@
 package com.gient.countDownLatch;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * 测试多线程执行时间
  * 
@@ -9,7 +11,9 @@ package com.gient.countDownLatch;
 public class Client {
 
 	public static void main(String[] args) {
-		LatchTarget target = new LatchTarget();
+		final CountDownLatch latch = new CountDownLatch(5);
+		//必须是同一个闭锁
+		LatchTarget target = new LatchTarget(latch);
 
 		long start = System.currentTimeMillis();
 
@@ -17,9 +21,15 @@ public class Client {
 			new Thread(target).start();
 		}
 
+		// 主线程等待
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		long end = System.currentTimeMillis();
-		//打印结果肯定不正确，因为主线程与其它线程时并行的，同时争夺cpu执行权
-		System.out.println(end - start);
+		System.out.println("time consuming:" + (end - start));
 	}
 
 }
