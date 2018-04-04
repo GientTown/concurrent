@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 测试并发迭代的线程任务
@@ -14,9 +15,9 @@ import java.util.Random;
  */
 public class Target implements Runnable {
 
-	private static List<String> list = 
-			Collections.synchronizedList(new ArrayList<>());
-
+	// 会抛出ConcurrentModificationException
+	//	private static List<String> list = Collections.synchronizedList(new ArrayList<>());
+	private static CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
 	// 初始化list
 	static {
 		list.add("AA");
@@ -26,13 +27,13 @@ public class Target implements Runnable {
 
 	@Override
 	public void run() {
-		//获取迭代器
+		// 获取迭代器
 		Iterator<String> it = list.iterator();
 		while (it.hasNext()) {
 			String string = (String) it.next();
 			System.out.println(string);
-			
-			//添加
+
+			// 添加
 			list.add("gient-" + new Random().nextInt(10));
 		}
 	}
