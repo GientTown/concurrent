@@ -8,12 +8,17 @@ package com.gient.lock;
  */
 public class Clerk {
 
-	private int products = 5;
+	private int products = 0;
+	private int proCount = 1;
+	private int CsuCount = 1;
 
 	/**
-	 * 进货
+	 * 进货，生产者
 	 */
 	public synchronized void get() {
+
+		System.out.println("第" + (proCount++) + "次生产+循环");
+
 		if (products >= 10) {
 			System.out.println("货架已满，请稍后上货！");
 			try {
@@ -21,17 +26,18 @@ public class Clerk {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} else {
-			System.out.println(Thread.currentThread().getName() + "正在上货！");
-			products++;
-			this.notifyAll();
 		}
+		System.out.println(Thread.currentThread().getName() + "正在上货！" + (++products));
+		this.notifyAll();
 	}
 
 	/**
-	 * 售货
+	 * 售货，消费者
 	 */
 	public synchronized void sale() {
+
+		System.out.println("第" + (CsuCount++) + "次消费-循环");
+
 		if (products <= 0) {
 			System.out.println("缺货");
 			try {
@@ -40,8 +46,7 @@ public class Clerk {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println(Thread.currentThread().getName() + "购买");
-			products--;
+			System.out.println(Thread.currentThread().getName() + "购买" + (products--));
 			this.notifyAll();
 		}
 	}
