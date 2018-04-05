@@ -1,6 +1,5 @@
 package com.gient.lock;
 
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -30,8 +29,7 @@ public class TicketsTask implements Runnable {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					System.out.println(Thread.currentThread().getName() +
-							"正在售票，剩余：" + (--tickets) + "张");
+					System.out.println(Thread.currentThread().getName() + "正在售票，剩余：" + (--tickets) + "张");
 				}
 			} finally {
 				// 释放锁
