@@ -1,5 +1,9 @@
 package com.gient.lock;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 售货职员
  * 
@@ -9,44 +13,60 @@ package com.gient.lock;
 public class Clerk {
 
 	private int products = 0;
-	private int proCount = 1;
-	private int CsuCount = 1;
+
+	private Lock lock = new ReentrantLock();
+	private Condition condition = lock.newCondition();
 
 	/**
 	 * 进货，生产者
 	 */
-	public synchronized void get() {
+	public /*synchronized*/ void get() {
+		// 上锁
+		lock.lock();
 
-		System.out.println("第" + (proCount++) + "次生产+循环");
-
-		while (products >= 10) {
-			System.out.println("货架已满，请稍后上货！");
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		try {
+			while (products >= 10) {
+				System.out.println("货架已满，请稍后上货！");
+				try {
+					// condition.signalAll();
+					condition.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			System.out.println(Thread.currentThread().getName() + "正在上货！" + (++products));
+			condition.signalAll();
+
+		} finally {
+			// 释放锁
+			lock.unlock();
 		}
-		System.out.println(Thread.currentThread().getName() + "正在上货！" + (++products));
-		this.notifyAll();
 	}
 
 	/**
 	 * 售货，消费者
 	 */
-	public synchronized void sale() {
+	public /*synchronized*/ void sale() {
 
-		System.out.println("第" + (CsuCount++) + "次消费-循环");
+		// 上锁
+		lock.lock();
 
-		while (products <= 0) {
-			System.out.println("缺货");
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		try {
+			while (products <= 0) {
+				System.out.println("缺货");
+				try {
+					// condition.signalAll();
+					condition.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			System.out.println(Thread.currentThread().getName() + "购买" + (products--));
+			condition.signalAll();
+
+		} finally {
+			// 释放锁
+			lock.unlock();
 		}
-		System.out.println(Thread.currentThread().getName() + "购买" + (products--));
-		this.notifyAll();
 	}
 }
