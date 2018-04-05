@@ -19,7 +19,7 @@ public class Clerk {
 
 		System.out.println("第" + (proCount++) + "次生产+循环");
 
-		if (products >= 10) {
+		while (products >= 10) {
 			System.out.println("货架已满，请稍后上货！");
 			try {
 				this.wait();
@@ -38,16 +38,15 @@ public class Clerk {
 
 		System.out.println("第" + (CsuCount++) + "次消费-循环");
 
-		if (products <= 0) {
+		while (products <= 0) {
 			System.out.println("缺货");
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		} else {
-			System.out.println(Thread.currentThread().getName() + "购买" + (products--));
-			this.notifyAll();
 		}
+		System.out.println(Thread.currentThread().getName() + "购买" + (products--));
+		this.notifyAll();
 	}
 }
