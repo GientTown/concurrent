@@ -12,7 +12,11 @@ public class ClerkClient {
 		Productor productor = new Productor(clerk);
 		Consumer consumer = new Consumer(clerk);
 		
-		new Thread(productor,"生产者+").start();
-		new Thread(consumer,"消费者-").start();
+		new Thread(productor,"生产者1+").start();
+		new Thread(consumer,"消费者1-").start();
+		new Thread(productor,"生产者2+").start();
+		new Thread(consumer,"消费者2-").start();
+		new Thread(productor,"生产者3+").start();
+		new Thread(consumer,"消费者3-").start();
 	}
 }
