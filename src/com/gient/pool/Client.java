@@ -1,9 +1,9 @@
 package com.gient.pool;
 
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class Client {
 
@@ -11,6 +11,7 @@ public class Client {
 
 		// 创建线程任务
 		PoolTask task = new PoolTask();
+		int num = new Random().nextInt(10);
 
 		// 创建线程池
 		ExecutorService pool = Executors.newFixedThreadPool(5);
