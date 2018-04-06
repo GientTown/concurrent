@@ -1,5 +1,6 @@
 package com.gient.pool;
 
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ public class ScheduleClient {
 
 		// 创建线程任务
 		PoolTask task = new PoolTask();
+		int num = new Random().nextInt(10);
 
 		// 创建线程池
 		ScheduledExecutorService pool = Executors.newScheduledThreadPool(5);
